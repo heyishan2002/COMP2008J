@@ -12,6 +12,8 @@ public class PassGo extends ActionCard {
 
     @Override
     public boolean use(Player p) {
-    	return false;
+        p.addCard(game.getDeck().pop());
+        p.addCard(game.getDeck().pop());
+        return true;
     }
 }

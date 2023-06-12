@@ -18,6 +18,27 @@ public class UniversalRent extends ActionCard {
 
     @Override
     public boolean use(Player p) {
-    	return false;
+        int payNum = ((propertyColor.getRent(p.getPropertyNum(propertyColor)) + p.getColorProperty(propertyColor).rentNum()) * p.isDouble());
+        Player p1 = p.choosePlayer();
+        if(p1 == null){
+           return false;
+        }
+        boolean isRejected = false;
+        if (p.reject(p)) {
+            isRejected = true;
+        }
+        if (!isRejected) {
+            Stack payCards = tenant.pay(payNum);
+            Iterator iterator = payCards.iterator();
+            while (iterator.hasNext()) {
+                Object card = iterator.next();
+                if (card instanceof Property) {
+                    p.addProperty((Property) card);
+                } else {
+                    p.addMoney((Bankable) card);
+                }
+            }
+        }
+        return true;
     }
 }

@@ -29,6 +29,28 @@ public class RentCard extends ActionCard {
 
     @Override
     public boolean use(Player p) {
-    	return false;
+            int payNum = ((propertyColor.getRent(p.getPropertyNum(propertyColor)) + p.getColorProperty(propertyColor).rentNum()) * p.isDouble());
+            if(payNum == 0){
+                return false;
+            }
+            for (Player player : this.game.getPlayers()) {
+                    boolean isRejected = false;
+                    if (player.reject(p)) {
+                        isRejected = true;
+                    }
+                    if (!isRejected) {
+                        Stack payCards = player.pay(payNum);
+                        Iterator iterator = payCards.iterator();
+                        while (iterator.hasNext()) {
+                            Object card = iterator.next();
+                            if (card instanceof Property) {
+                                p.addProperty((Property) card);
+                            } else {
+                                p.addMoney((Bankable) card);
+                            }
+                        }
+                    }
+            }
+        return true;
     }
 }
