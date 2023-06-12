@@ -12,6 +12,7 @@ public class DoubleRent extends ActionCard {
 
     @Override
     public boolean use(Player p) {
-    	return false;
+        p.addAction();
+        return true;
     }
 }

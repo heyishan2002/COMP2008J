@@ -17,6 +17,23 @@ public class CollectionOfDebt extends ActionCard {
 
     @Override
     public boolean use(Player player) {
-       return false;
+        /**The user selects a player who pays a $5,000 debt to the user**/
+        Player tenant = player.choosePlayer();
+        if(tenant == null){
+            return false;
+        }
+        if (!tenant.reject(player)) {
+            Stack payCards = tenant.pay(5);
+            Iterator iterator = payCards.iterator();
+            while (iterator.hasNext()) {
+                Object card = iterator.next();
+                if (card instanceof Property) {
+                    player.addProperty((Property) card);
+                } else {
+                    player.addMoney((Bankable) card);
+                }
+            }
+        }
+        return true;
     }
 }
