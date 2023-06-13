@@ -4,21 +4,23 @@ import java.util.Scanner;
 
 public class Property extends Card {
     public  int availableColor;
-    String name;
     String mes;
     public PropertyColor propertyColor;
     public PropertyColor[] availablePropertyColors = new PropertyColor[10];
     int[] rent;
 
     public Property(PropertyColor c, String name) {
+        this.message = c.toString();
         availableColor = 1;
         propertyColor = c;
         availablePropertyColors[0] = c;
         this.name = name;
         this.type = Type.PROPERTY;
+        this.use();
     }
 
     public Property(PropertyColor c1, PropertyColor c2, String name) {
+        this.message = c1.toString() + " and " + c2.toString();
         availableColor = 2;
         this.availablePropertyColors[0] = c1;
         this.availablePropertyColors[1] = c2;
@@ -28,6 +30,7 @@ public class Property extends Card {
 
     public Property(PropertyColor c1, PropertyColor c2, PropertyColor c3, PropertyColor c4, PropertyColor c5, PropertyColor c6, PropertyColor c7,
                     PropertyColor c8, PropertyColor c9, PropertyColor c10, String name) {
+        this.message = "You could use it as any color";
         availableColor = 3;
         this.availablePropertyColors = new PropertyColor[]{c1, c2, c3, c4, c5, c6, c7, c8, c9, c10};
         this.name = name;

@@ -28,12 +28,18 @@ public class Hotel extends ActionCard {
     public boolean use(Player p) {
         MInterface mInterface =game.mInterface;
         game.refreshSelected();
-        p.selectable();
+        Iterator<PlayerProperty> iterator2 = p.getMyProperty().iterator();
+        while (iterator2.hasNext()) {
+            iterator2.next().selectable();
+        }
         MInterface.ButtonName buttonName = mInterface.gameInterface(p.getName(), "Please choose the property to add a hotel", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
         if(buttonName == MInterface.ButtonName.cancel){
             return false;
         }
         ArrayList<Selectable> selected1 = this.game.getSelected();
+        if(selected1.isEmpty()){
+            return false;
+        }
         game.refreshSelected();
         Iterator<Selectable> iterator = selected1.iterator();
         PlayerProperty next = (PlayerProperty) iterator.next();

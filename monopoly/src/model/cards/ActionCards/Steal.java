@@ -8,6 +8,8 @@ import model.cards.Selectable;
 import model.player.Player;
 import model.player.PlayerProperty;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Stack;
 
 public class Steal extends ActionCard {
@@ -23,19 +25,34 @@ public class Steal extends ActionCard {
              * if the industry has become a set, you need to re-select**/
         MInterface mInterface = game.mInterface;
         Player exchanger = p.choosePlayer();
+        if(exchanger == null){
+            return false;
+        }
         int hasPropertyNum = exchanger.getHasPropertyNum();
         if(hasPropertyNum == 0) {
             return false;
         }
         if(!exchanger.reject(p)){
             game.refreshSelected();
-            exchanger.pro.selectable();
-            MInterface.ButtonName buttonName2 = mInterface.gameInterface(exchanger.getName(), "please choose a property to get", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
-
+            Iterator<PlayerProperty> iterator2 = exchanger.getMyProperty().iterator();
+            while (iterator2.hasNext()) {
+                PlayerProperty next = iterator2.next();
+                Stack<Property> p1 = next.getP();
+                for(Property pr:p1){
+                    pr.selectable();
+                }
+            }
+            MInterface.ButtonName buttonName2 = mInterface.gameInterface(p.getName(), "please choose a property to get", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
             if(buttonName2 == MInterface.ButtonName.cancel){
+                System.out.println("1");
                 return false;
             }
-            Selectable next2 = game.getSelected().iterator().next();
+            ArrayList<Selectable> selected1 = game.getSelected();
+            if(selected1.isEmpty()){
+                System.out.println("2");
+                return false;
+            }
+            Selectable next2 = selected1.iterator().next();
             game.refreshSelected();
             p.addProperty((Property) next2);
             exchanger.removeProperty((Property) next2);

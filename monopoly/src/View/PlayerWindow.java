@@ -11,6 +11,7 @@ import javax.swing.*;
 import model.cards.Bankable;
 import model.cards.Card;
 import model.cards.Property;
+import model.cards.PropertyColor;
 import model.cards.Selectable;
 import model.cards.Type;
 import model.player.Player;
@@ -78,20 +79,20 @@ public class PlayerWindow {
 		hcArea = new MArea(ix, iy + msgArea.height + bankArea.height, playerWindowWidth, CardHeight + CardDist * 2, BackGroundColor, "HandCards");
 		buttonArea = new MArea(ix, iy + msgArea.height + bankArea.height + hcArea.height, playerWindowWidth, MsgAreaHeight + CardDist * 2, BackGroundColor, " ");
 		
-		int x, y;
+		int i, x, y;
 		
 		propertyArea = new MArea[10];
-		for (int i = 0; i < 10; i ++) {
-			if (i < 5)
+		for (i = 0; i < 10; i++) {
+            if (i < 5)
 				y = iy + msgArea.height;
 			else
 				y = iy + msgArea.height + propertyAreaHeight;
+			
 			x = ix + (CardDist + CardWidth) * MCardNumInRow + (CardWidth + 2* CardDist) * (i % 5);
 			
 			propertyArea[i] = new MArea(x, y, CardWidth + 2* CardDist, propertyAreaHeight, Color.white, "Property");
-			
-		}
-		
+        }
+				
 		y = iy + msgArea.height + propertyAreaHeight * 2 + CardHeight + CardDist * 3;
 		x = ix + MButton.buttonWidth;
 		buttonBank = new MButton(" bank", MButton.ButtonType.bank, x, y);
@@ -107,21 +108,72 @@ public class PlayerWindow {
 				
 	}
 	
+	public void setPropertyArea() {
+		int i, x, y;
+		
+		ArrayList<Stack> s1 = player.getCards();
+
+		Stack<PlayerProperty> propS = s1.get(1);
+		PlayerProperty ppt;
+        Iterator<PlayerProperty> iterator = propS.iterator();
+        
+        i = 0;
+        while(iterator.hasNext()){
+            ppt = iterator.next();
+            			
+			propertyArea[i].setColor(convert2Color(ppt.getColor()));
+			ppt.setArea(propertyArea[i].x, propertyArea[i].y, propertyArea[i].width, propertyArea[i].height);
+            
+            i++;
+            if (i >= 10)
+            	break;
+        }
+	}
+	
 	public void drawWindowBackgroud(Graphics2D gc) {
 		if (player != gmain.mInterface.getCurrentPlayer())
-			hcArea.setColor(Color.lightGray);
+			hcArea.hideArea(gc);
 		else
-			hcArea.setColor(BackGroundColor);
+			hcArea.drawArea(gc);
 		
 		msgArea.drawArea(gc);
 		bankArea.drawArea(gc);
-		hcArea.drawArea(gc);
+		
 		buttonArea.drawArea(gc);
 		
-		for (int i = 0; i < 10; i++)
-			propertyArea[i].drawArea(gc);
+        int i;
 		
-		gc.setStroke(new BasicStroke(AreaBorderWidth));
+		for (i = 0; i < 10; i++) {
+			propertyArea[i].drawArea(gc);
+			
+		}
+		ArrayList<Stack> s1 = player.getCards();
+
+		Stack<PlayerProperty> propS = s1.get(1);
+		PlayerProperty ppt;
+        Iterator<PlayerProperty> iterator = propS.iterator();
+        
+        i = 0;
+        while(iterator.hasNext()){
+            ppt = iterator.next();
+            			
+			if (propertyArea[i].getColor().equals(convert2Color(ppt.getColor()))) {
+				if (ppt.isSelected()) {
+		        	gc.setStroke(new BasicStroke(AreaBorderWidth * 2));
+		    		gc.setColor(Color.black);
+		    		gc.drawRect(propertyArea[i].x, propertyArea[i].y, propertyArea[i].width , propertyArea[i].height);
+		    		break;
+		        }
+			}
+            i++;
+            if (i >= 10)
+            	break;
+        }
+        
+        if(player.isSelected())
+        	gc.setStroke(new BasicStroke(AreaBorderWidth * 2));
+        else
+        	gc.setStroke(new BasicStroke(AreaBorderWidth));
 		gc.setColor(Color.black);
 		gc.drawRect(ix, iy, playerWindowWidth , playerWindowHeight);
 		
@@ -241,7 +293,7 @@ public class PlayerWindow {
 		
 		if (player.bank.isSelectable) {
 			if (bankArea.inArea(x, y)){
-				player.setSelected(true);
+				player.bank.setSelected(true);
 				return player.bank;
 			}
 		}
@@ -316,48 +368,39 @@ public class PlayerWindow {
 		fontColor = Color.black;
 		if (card.getType() == Type.PROPERTY) {
 			p = (Property)card;
-			switch (p.getColor()) {
-				case Brown:
-					gc.setColor(Color.magenta);
-					break;
-				case LightBlue:
-					gc.setColor(Color.blue);
-					break;
-				case Pink:
-					gc.setColor(Color.pink);
-					break;
-				case Orange:
-					gc.setColor(Color.orange);
-					break;
-				case RED:
-					gc.setColor(Color.red);
-					break;
-				case Yellow:
-					gc.setColor(Color.yellow);
-					break;
-				case DarkGreen:
-					gc.setColor(new Color(0, 128, 0));
-					break;
-				case DarkBlue:
-					gc.setColor(new Color(0, 0, 128));
-					break;
-				case Black:
-					gc.setColor(Color.black);
-					fontColor = Color.white;
-					break;
-				case LightGreen:
-					gc.setColor(Color.green);
-					break;
+			
+			fontColor = Color.white;
+			if (p.getColor() != null) {
+				gc.setColor(convert2Color(p.getColor()));
+				gc.fillRect(card.x, card.y, card.w, card.h);
+				fontColor = contrastColor(convert2Color(p.getColor()));
+			}else if (p.availableColor == 1) {
+				gc.setColor(convert2Color(p.availablePropertyColors[0]));
+				gc.fillRect(card.x, card.y, card.w, card.h);
+				fontColor = contrastColor(convert2Color(p.availablePropertyColors[0]));
+			} else if (p.availableColor == 2) {
+				gc.setColor(convert2Color(p.availablePropertyColors[0]));
+				gc.fillRect(card.x, card.y, card.w, card.h / 2);
+				gc.setColor(convert2Color(p.availablePropertyColors[1]));
+				gc.fillRect(card.x, card.y + card.h / 2 + 1, card.w, card.h / 2);
+				fontColor = contrastColor(convert2Color(p.availablePropertyColors[0]));
+			} else {
+				gc.setColor(Color.red);
+				gc.fillRect(card.x, card.y, card.w, card.h / 3);
+				gc.setColor(Color.yellow);
+				gc.fillRect(card.x, card.y + card.h / 3 + 1, card.w, card.h / 3);
+				gc.setColor(Color.blue);
+				gc.fillRect(card.x, card.y + card.h * 2 / 3 + 2, card.w, card.h / 3);
 			}
 		}
-		gc.fillRect(card.x, card.y, card.w, card.h);
+
 		Font f = new Font("Courier", Font.BOLD, 6);
 		gc.setFont(f);
 		gc.setColor(fontColor);
 		String str;
-		str = String.format("$%d   %s", card.getMoney(), card.getName());
 		//str = "CARD";
-		gc.drawString(str, card.x + 2 , card.y + 10);
+		gc.drawString("$" + card.getMoney(), card.x + 2 , card.y + 6);
+		gc.drawString(card.getName(), card.x + 4 , card.y + 12);
 		/*
 		switch (card.getType()) {
 			case MONEY:
@@ -372,9 +415,63 @@ public class PlayerWindow {
 			gc.setStroke(new BasicStroke(AreaBorderWidth));
 		else
 			gc.setStroke(new BasicStroke(1));
-		gc.setColor(Color.black);
+		gc.setColor(fontColor);
 		gc.drawRect(card.x, card.y, card.w, card.h);
 		
+	}
+	
+	public Color convert2Color(PropertyColor color) {
+		Color c;
+		c = Color.white;
+		
+		switch (color) {
+			case Brown:
+				c = new Color(165, 42, 42);
+				break;
+			case LightBlue:
+				c = Color.blue;
+				break;
+			case Pink:
+				c = Color.pink;
+				break;
+			case Orange:
+				c = Color.orange;
+				break;
+			case RED:
+				c = Color.red;
+				break;
+			case Yellow:
+				c = Color.yellow;
+				break;
+			case DarkGreen:
+				c = new Color(0, 128, 0);
+				break;
+			case DarkBlue:
+				c = new Color(0, 0, 128);
+				break;
+			case Black:
+				c = Color.black;
+				break;
+			case LightGreen:
+				c = Color.green;
+				break;
+		}
+		
+		return c;
+	}
+	
+	private int CC(int c){
+        int cc = 255 - c;
+        if(cc>64 && cc<128)
+            cc-=64;
+        else if(cc>=128 && cc<192)
+            cc+=64;
+        return cc;
+    }
+
+	
+	public Color contrastColor(Color color) {
+		return new Color(CC(color.getRed()), CC(color.getGreen()), CC(color.getBlue()));
 	}
 	
 }

@@ -25,8 +25,27 @@ public class MArea {
 		color = c;
 	}
 	
+	public Color getColor() {
+		return color;
+	}
+	
 	public void drawArea(Graphics2D gc) {
+		gc.setColor(Color.white);
+		gc.fillRect(x, y, width, height);
 		gc.setColor(color);
+		gc.fillRect(x + 20, y, width - 20, 10);
+		
+		gc.setColor(Color.GRAY);
+		gc.setStroke(new BasicStroke(PlayerWindow.AreaBorderWidth));
+		gc.drawRect(x, y, width, height);
+		gc.setColor(Color.black);
+		Font f = new Font("Courier", Font.BOLD, PlayerWindow.CardDist - 1);
+		gc.setFont(f);
+		gc.drawString(name, x + 3 , y + PlayerWindow.CardDist - 1);
+	}
+	
+	public void hideArea(Graphics2D gc) {
+		gc.setColor(Color.lightGray);
 		gc.fillRect(x, y, width, height);
 		
 		gc.setColor(Color.GRAY);

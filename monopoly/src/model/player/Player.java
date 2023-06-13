@@ -29,6 +29,11 @@ public class Player extends Selectable{
 
     //Cards owned by the player
     Stack<PlayerProperty> myProperty = new Stack<>();
+
+    public Stack<Bankable> getMyBank() {
+        return myBank;
+    }
+
     Stack<Bankable> myBank = new Stack<>();
     Stack<Card> handCards = new Stack<>();
 
@@ -78,9 +83,17 @@ public class Player extends Selectable{
             if(myBank.empty()){
                 int payProperty = 0;
                 game.refreshSelected();
-                this.bank.selectable();
+                Iterator<PlayerProperty> iterator = this.myProperty.iterator();
+                while(iterator.hasNext()){
+                    PlayerProperty next1 = iterator.next();
+                    next1.selectable();
+                }
                 MInterface.ButtonName buttonName2 = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
-                Iterator<Selectable> iterator2 = game.getSelected().iterator();
+                ArrayList<Selectable> selected1 = game.getSelected();
+                if(selected1.isEmpty() || buttonName2 == MInterface.ButtonName.cancel){
+                    continue;
+                }
+                Iterator<Selectable> iterator2 = selected1.iterator();
                 while (iterator2.hasNext()){
                     payMoney += ((Card)iterator2.next()).getMoney();
                 }
@@ -90,6 +103,7 @@ public class Player extends Selectable{
                     while (iterator3.hasNext()){
                         Selectable next1 = iterator3.next();
                         if(next1 instanceof Property){
+                            System.out.println("1");
                             payCards.push((Card) next1);
                             this.removeProperty((Property) next1);
                         }
@@ -103,9 +117,15 @@ public class Player extends Selectable{
                 }
             }else {
                 game.refreshSelected();
-                this.bank.selectable();
+                for(Bankable b : this.myBank){
+                    b.selectable();
+                }
                 MInterface.ButtonName buttonName = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
-                Iterator<Selectable> iterator = game.getSelected().iterator();
+                ArrayList<Selectable> selected1 = game.getSelected();
+                if(selected1.isEmpty() || buttonName == MInterface.ButtonName.cancel){
+                    continue;
+                }
+                Iterator<Selectable> iterator = selected1.iterator();
                 while (iterator.hasNext()) {
                     payMoney += ((Card) iterator.next()).getMoney();
                 }
@@ -116,6 +136,7 @@ public class Player extends Selectable{
                         Selectable next1 = iterator2.next();
                         if (next1 instanceof Bankable) {
                             this.myBank.remove(next1);
+                            System.out.println("2");
                             payCards.push((Card) next1);
                         }
                     }
@@ -123,9 +144,17 @@ public class Player extends Selectable{
                     if (this.myBank.empty()) {
                         int payProperty = 0;
                         game.refreshSelected();
-                        this.bank.selectable();
+                        Iterator<PlayerProperty> iterator5 = this.myProperty.iterator();
+                        while(iterator5.hasNext()){
+                            PlayerProperty next1 = iterator5.next();
+                            next1.selectable();
+                        }
                         MInterface.ButtonName buttonName2 = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
-                        Iterator<Selectable> iterator2 = game.getSelected().iterator();
+                        ArrayList<Selectable> selected2 = game.getSelected();
+                        if(selected2.isEmpty() || buttonName2 == MInterface.ButtonName.cancel){
+                            continue;
+                        }
+                        Iterator<Selectable> iterator2 = selected2.iterator();
                         while (iterator2.hasNext()) {
                             payMoney += ((Card) iterator2.next()).getMoney();
                         }
@@ -135,6 +164,7 @@ public class Player extends Selectable{
                             while (iterator3.hasNext()) {
                                 Selectable next1 = iterator3.next();
                                 if (next1 instanceof Property) {
+                                    System.out.println("3");
                                     payCards.push((Card) next1);
                                     this.removeProperty((Property) next1);
                                 }
@@ -152,7 +182,7 @@ public class Player extends Selectable{
                 }
             }
         }
-        return null;
+        return payCards;
     }
 
 
@@ -207,6 +237,16 @@ public class Player extends Selectable{
         this.birthDate = date;
         this.game = g;
         this.mInterface = game.mInterface;
+        myProperty.push(new PlayerProperty(PropertyColor.RED));
+        myProperty.push(new PlayerProperty(PropertyColor.Black));
+        myProperty.push(new PlayerProperty(PropertyColor.Brown));
+        myProperty.push(new PlayerProperty(PropertyColor.LightBlue));
+        myProperty.push(new PlayerProperty(PropertyColor.DarkGreen));
+        myProperty.push(new PlayerProperty(PropertyColor.LightGreen));
+        myProperty.push(new PlayerProperty(PropertyColor.DarkBlue));
+        myProperty.push(new PlayerProperty(PropertyColor.Orange));
+        myProperty.push(new PlayerProperty(PropertyColor.Pink));
+        myProperty.push(new PlayerProperty(PropertyColor.Yellow));
     }
 
     public String getName() {
@@ -322,98 +362,145 @@ public class Player extends Selectable{
 
 
         //Start action
-        while(action++ < 3){
+        while(action++ < 3) {
             game.refreshSelected();
 
             Iterator<Card> iterator = this.handCards.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 iterator.next().selectable();
             }
 
             MInterface.ButtonName buttonName = mInterface.gameInterface(this.name, "Please choose the card to use", MInterface.OperationType.card_operation, MInterface.SelectionType.single);
 
-            if(buttonName == MInterface.ButtonName.cancel){
+            if (buttonName == MInterface.ButtonName.skip) {
                 game.refreshSelected();
-                return;
+                break;
             }
             ArrayList<Selectable> cards = this.game.getSelected();
             game.refreshSelected();
+            if (cards.isEmpty()) {
+                action--;
+                continue;
+
+            }
             Iterator<Selectable> card = cards.iterator();
             Card useCard = (Card) card.next();
-            if(useCard == null){
+            if (useCard == null) {
                 break;
             }
-            switch (useCard.getType()){
+            switch (useCard.getType()) {
                 //The operation is performed according to the type of card returned
-                case ACTION : {
-                    if(buttonName == MInterface.ButtonName.bank){
+                case ACTION: {
+                    if (buttonName == MInterface.ButtonName.bank) {
                         this.addMoney((Bankable) useCard);
                         this.handCards.remove(useCard);
-                    }else{
-                        ((ActionCard) useCard).use(this);
-                        this.handCards.remove(useCard);
+                    } else {
+                        if (((ActionCard) useCard).use(this)) {
+                            this.handCards.remove(useCard);
+                        } else {
+                            action--;
+                        }
+
                     }
+                    break;
                 }
-                case MONEY :{
+                case MONEY: {
                     this.addMoney((Bankable) useCard);
                     this.getHandCards().remove(useCard);
                     break;
                 }
 
                 case PROPERTY: {
-                    switch (((Property)useCard).availableColor){
-                        case 1:{
+                    switch (((Property) useCard).availableColor) {
+                        case 1: {
                             this.addProperty((Property) useCard);
                             this.handCards.remove(useCard);
+                            break;
                         }
-                        case 2:{
+                        case 2: {
                             PropertyColor[] availablePropertyColors = ((Property) useCard).availablePropertyColors;
                             PropertyColor availablePropertyColor1 = availablePropertyColors[0];
                             PropertyColor availablePropertyColor2 = availablePropertyColors[1];
                             getColorProperty(availablePropertyColor1).selectable();
                             getColorProperty(availablePropertyColor2).selectable();
                             MInterface.ButtonName buttonName1 = mInterface.gameInterface(this.name, "Please choose the color", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
-                            if(buttonName1 == MInterface.ButtonName.cancel){
+                            if (buttonName1 == MInterface.ButtonName.cancel) {
                                 action--;
                                 continue;
                             }
-
-                            Iterator<Selectable> iterator1 = game.getSelected().iterator();
+                            ArrayList<Selectable> selected1 = game.getSelected();
+                            if (selected1.isEmpty()) {
+                                action--;
+                                continue;
+                            }
+                            Iterator<Selectable> iterator1 = selected1.iterator();
                             game.refreshSelected();
                             PlayerProperty next1 = (PlayerProperty) iterator1.next();
                             ((Property) useCard).propertyColor = next1.getColor();
                             ((Property) useCard).use();
                             next1.addProperty((Property) useCard);
+                            this.handCards.remove(useCard);
+                            break;
                         }
-                        case 3:{
+                        case 3: {
                             Iterator<PlayerProperty> iterator2 = myProperty.iterator();
-                            while (iterator2.hasNext()){
+                            while (iterator2.hasNext()) {
                                 iterator2.next().selectable();
                             }
                             MInterface.ButtonName buttonName1 = mInterface.gameInterface(this.name, "Please choose the color", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
-                            if(buttonName1 == MInterface.ButtonName.cancel){
+                            if (buttonName1 == MInterface.ButtonName.cancel) {
                                 action--;
                                 continue;
                             }
-                            Iterator<Selectable> iterator1 = game.getSelected().iterator();
+                            ArrayList<Selectable> selected1 = game.getSelected();
+                            if (selected1.isEmpty()) {
+                                action--;
+                                continue;
+                            }
+                            Iterator<Selectable> iterator1 = selected1.iterator();
                             game.refreshSelected();
                             PlayerProperty next1 = (PlayerProperty) iterator1.next();
                             ((Property) useCard).propertyColor = next1.getColor();
                             ((Property) useCard).use();
                             next1.addProperty((Property) useCard);
+                            this.handCards.remove(useCard);
+                            break;
                         }
                     }
                 }
             }
-            if(isWin()){
+            if (isWin()) {
                 game.gameOver();
-                break;
             }
         }
+        while (this.handCards.toArray().length > 7) {
+            game.refreshSelected();
 
+            Iterator<Card> iterator3 = this.handCards.iterator();
+            while (iterator3.hasNext()) {
+                iterator3.next().selectable();
+            }
 
+            MInterface.ButtonName buttonName3 = mInterface.gameInterface(this.name, "Please choose the card to quit", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
+
+            if (buttonName3 == MInterface.ButtonName.cancel) {
+                game.refreshSelected();
+                continue;
+            }
+            ArrayList<Selectable> cards3 = this.game.getSelected();
+            game.refreshSelected();
+            if (cards3.isEmpty()) {
+                continue;
+            }
+            Iterator<Selectable> card3 = cards3.iterator();
+            Card quitCard = (Card) card3.next();
+            this.handCards.remove(quitCard);
+        }
 
     }
+
+
+
 
 
     public ArrayList<Stack> getCards(){
@@ -447,6 +534,14 @@ public class Player extends Selectable{
     }
 
     public void noSelectable(){
+        Iterator<PlayerProperty> iterator2 = this.getMyProperty().iterator();
+        while (iterator2.hasNext()) {
+            PlayerProperty next = iterator2.next();
+            Stack<Property> p1 = next.getP();
+            for(Property pr:p1){
+                pr.selectable();
+            }
+        }
         this.unSelectable();
         this.selected = false;
         this.hand.unSelectable();
@@ -466,7 +561,11 @@ public class Player extends Selectable{
             game.refreshSelected();
             return null;
         }else{
-            Iterator<Selectable> iterator1 = game.getSelected().iterator();
+            ArrayList<Selectable> selected1 = game.getSelected();
+            if(selected1.isEmpty()){
+                return null;
+            }
+            Iterator<Selectable> iterator1 = selected1.iterator();
             game.refreshSelected();
             return (Player) iterator1.next();
         }

@@ -30,6 +30,9 @@ public class GamePanel extends JPanel {
 		if (i >= 4)
 			return;
 		playerWindow[i].player = p;
+		if  (i == 3)
+			for (i = 0; i < 4; i ++) 
+				playerWindow[i].setPropertyArea();
 	}
 	
 	public Player getPlayer(String name) {

@@ -120,6 +120,7 @@ public class GameListener implements MouseListener{
 				}
 				gmain.gInterface.gPanel.lastSelected = selected;
 				panel.repaint();
+				System.out.println("repaint");
 				break;
 			}
 		}

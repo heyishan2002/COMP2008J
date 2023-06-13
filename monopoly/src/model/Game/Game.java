@@ -5,11 +5,11 @@ import View.MInterface;
 import model.cards.*;
 import model.cards.ActionCards.*;
 import model.player.Player;
+import model.player.PlayerProperty;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Stack;
+import java.util.*;
 
 public class Game {
     public MInterface mInterface;
@@ -41,6 +41,7 @@ public class Game {
 
     public Stack<Card> newPile(){
         Stack<Card> cards = new Stack<>();
+        Stack<Card> cards2 = new Stack<>();
         for(int i = 0; i< 1;i++){
             cards.push(new Money(10));
         }
@@ -98,7 +99,14 @@ public class Game {
             cards.push(new Money(3));
             cards.push(new Money(4));
         }
-        return cards;
+        Object[] array = cards.toArray();
+        List<Object> list = Arrays.asList(array);
+        Collections.shuffle(list);
+        Iterator<Object> iterator = list.iterator();
+        while(iterator.hasNext()){
+            cards2.push((Card) iterator.next());
+        }
+        return cards2;
     }
 
     public void startGame(){
@@ -142,7 +150,24 @@ public class Game {
     }
 
     public ArrayList<Selectable> getSelected(){
+
         ArrayList<Selectable> selectables = new ArrayList<>();
+
+        for(Player player:this.players) {
+            if(player.selected){
+                selectables.add(player);
+            }
+            Iterator<PlayerProperty> iterator2 = player.getMyProperty().iterator();
+            while (iterator2.hasNext()) {
+                PlayerProperty next = iterator2.next();
+                Stack<Property> p1 = next.getP();
+                for(Property pr:p1){
+                    if(pr.selected){
+                        selectables.add(pr);
+                    }
+                }
+            }
+        }
         ArrayList<ArrayList<Stack>> stack = this.getStack();
         for(ArrayList<Stack> each: stack){
             for (Stack stacks:each){
@@ -161,8 +186,18 @@ public class Game {
     public void refreshSelected(){
         for(Player player:this.players) {
             player.noSelectable();
+            Iterator<PlayerProperty> iterator2 = player.getMyProperty().iterator();
+            while (iterator2.hasNext()) {
+                PlayerProperty next = iterator2.next();
+                Stack<Property> p1 = next.getP();
+                for(Property pr:p1){
+                    pr.unSelectable();
+                }
+                for(Bankable b:player.getMyBank()){
+                    b.selectable();
+                }
+            }
         }
-        ArrayList<Selectable> selectables = new ArrayList<>();
         ArrayList<ArrayList<Stack>> stack = this.getStack();
         for(ArrayList<Stack> each: stack){
             for (Stack stacks:each){
