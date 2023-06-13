@@ -41,11 +41,13 @@ public class PlayerWindow {
 	
 	public MButton buttonBank, buttonAction, buttonSkip, buttonOK, buttonDiscard, buttonCancel;
 	
+	private Image gameBackground;
+	
 	public PlayerWindow(GamePanel panel, int pN, Player player) {
 		p = panel;
 		playerNo = pN;
 		this.player = player;
-		
+				
 		int propertyAreaHeight = CardDist * 2 + (int)(CardHeight * 2.33);
 		
 		playerWindowHeight = NameAreaHeight + CardDist * 2;
@@ -105,6 +107,8 @@ public class PlayerWindow {
 		buttonCancel = new MButton("cancel", MButton.ButtonType.cancel, x , y);
 		x += MButton.buttonWidth;
 		buttonSkip = new MButton(" skip", MButton.ButtonType.skip, x , y);
+		
+		gameBackground = new ImageIcon("monopoly_background.jpg").getImage();
 				
 	}
 	
@@ -134,19 +138,37 @@ public class PlayerWindow {
 		if (player != gmain.mInterface.getCurrentPlayer())
 			hcArea.hideArea(gc);
 		else
-			hcArea.drawArea(gc);
+			hcArea.drawArea(gc, true);
 		
-		msgArea.drawArea(gc);
-		bankArea.drawArea(gc);
+		msgArea.drawArea(gc, true);
+		bankArea.drawArea(gc, true);
 		
-		buttonArea.drawArea(gc);
-		
+		buttonArea.drawArea(gc, true);
+			
         int i;
 		
 		for (i = 0; i < 10; i++) {
-			propertyArea[i].drawArea(gc);
+			propertyArea[i].drawArea(gc, true);
 			
 		}
+
+		gc.drawImage(gameBackground, ix, iy, 500, 500, null);
+		
+		if (player != gmain.mInterface.getCurrentPlayer())
+			hcArea.hideArea(gc);
+		else
+			hcArea.drawArea(gc, false);
+		
+		msgArea.drawArea(gc, false);
+		bankArea.drawArea(gc, false);
+		
+		buttonArea.drawArea(gc, false);
+			
+		for (i = 0; i < 10; i++) {
+			propertyArea[i].drawArea(gc, false);
+			
+		}
+		
 		ArrayList<Stack> s1 = player.getCards();
 
 		Stack<PlayerProperty> propS = s1.get(1);
@@ -250,6 +272,20 @@ public class PlayerWindow {
             Property pt = null;
             x = y = 0;
             j = 0;
+            if (ppt.house != null) {
+            	x = propertyArea[i].x + CardDist;
+                y = propertyArea[i].y + CardDist + (int)(CardHeight * 0.33) * j;
+                ppt.house.setArea(x, y, CardWidth, (int)(CardHeight * 0.33));
+                j++;
+                drawCard(gc, ppt.house);
+            }
+            if (ppt.hotel != null) {
+            	x = propertyArea[i].x + CardDist;
+                y = propertyArea[i].y + CardDist + (int)(CardHeight * 0.33) * j;
+                ppt.hotel.setArea(x, y, CardWidth, (int)(CardHeight * 0.33));
+                j++;
+                drawCard(gc, ppt.hotel);
+            }
             while(iterator3.hasNext()){
                 pt = iterator3.next();
                
@@ -334,6 +370,18 @@ public class PlayerWindow {
            
             Iterator<Property> iterator3 = ppt.getP().iterator();
             Property pt;
+            if (ppt.house != null) {
+            	if (ppt.house.isSelectable && ppt.house.inArea(x,  y)){
+            		ppt.house.setSelected(true);
+                	return ppt.house;
+            	}
+            }
+            if (ppt.hotel != null) {
+            	if (ppt.hotel.isSelectable && ppt.hotel.inArea(x,  y)){
+            		ppt.hotel.setSelected(true);
+                	return ppt.hotel;
+                }
+            }
             while(iterator3.hasNext()){
                 pt = iterator3.next();
                 if (pt.isSelectable && pt.inArea(x,  y)){
@@ -392,6 +440,11 @@ public class PlayerWindow {
 				gc.setColor(Color.blue);
 				gc.fillRect(card.x, card.y + card.h * 2 / 3 + 2, card.w, card.h / 3);
 			}
+		}
+		else {
+			gc.setColor(Color.lightGray);
+			gc.fillRect(card.x, card.y, card.w, card.h);
+			fontColor = Color.black;
 		}
 
 		Font f = new Font("Courier", Font.BOLD, 6);

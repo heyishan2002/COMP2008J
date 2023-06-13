@@ -12,6 +12,8 @@ public class GamePanel extends JPanel {
 
 	public PlayerWindow[] playerWindow; 
 	public Selectable lastSelected;
+	private boolean gameOver;
+	private String gameOverMsg;
 	
 	public GamePanel() {
 		playerWindow= new PlayerWindow[4];
@@ -19,6 +21,8 @@ public class GamePanel extends JPanel {
 			playerWindow[i] = new PlayerWindow(this, i, null);
 		}
 		lastSelected = null;
+		gameOver = false;
+		gameOverMsg = null;
 	}
 	
 	public void addPlayer(Player p) {
@@ -50,6 +54,11 @@ public class GamePanel extends JPanel {
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+
+		if (gameOver) {
+			showGameOver(g2);
+			return;
+		}
 
 		for (int i = 0; i < 4; i ++) {
 			playerWindow[i].drawWindowBackgroud(g2);
@@ -83,6 +92,29 @@ public class GamePanel extends JPanel {
 	
 	public void showMsg() {
 		
+	}
+	
+	public void gameOver(String msg) {
+		gameOverMsg = new String(msg);
+		gameOver = true;
+	}
+	
+	public void showGameOver(Graphics2D gc) {
+		int h = 50;
+		int x = playerWindow[0].playerWindowWidth - gameOverMsg.length() * h / 6 - 50;
+		int y = playerWindow[0].playerWindowHeight - h / 2;
+		int w = gameOverMsg.length() * h / 3 + 100;
+
+		gc.setColor(Color.lightGray);
+		gc.fillRoundRect(x, y, w, h, w / 8, h / 8);
+		gc.setStroke(new BasicStroke(5));
+		gc.setColor(Color.black);
+		gc.drawRoundRect(x , y, w, h, w / 8, h / 8);
+		
+		Font f = new Font("Courier", Font.PLAIN, h / 2 );
+		gc.setFont(f);	
+		gc.setColor(Color.magenta);
+		gc.drawString(gameOverMsg, x + 100 , y + h * 2 / 3);
 	}
 	
 	

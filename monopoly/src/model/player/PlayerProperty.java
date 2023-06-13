@@ -9,7 +9,7 @@ import java.util.Stack;
 public class PlayerProperty extends Selectable {
 
     public House house;
-    Hotel hotel;
+    public Hotel hotel;
     int numP;
     Stack<Property> propertyStack = new Stack<>();
     PropertyColor propertyColor;

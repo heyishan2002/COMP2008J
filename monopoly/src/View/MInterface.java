@@ -6,7 +6,8 @@ public class MInterface {
 	public enum OperationType{
 		ok_cancel,
 		card_operation,
-		discard_cancel
+		discard_cancel,
+		game_over
 	}
 	public enum ButtonName{
 		ok,
@@ -58,16 +59,41 @@ public class MInterface {
 		interfaceMsg = new String(msg);
 		p = gmain.gInterface.gPanel.getPlayer(pName);
 		gmain.gInterface.gPanel.clearStatus();
+		
+		/*gmain.gInterface.gPanel.gameOver(pName + " " + msg);
+		gmain.gInterface.gPanel.repaint();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ButtonName.ok;
+		*/
+		
+		if (opType == OperationType.game_over) {
+			gmain.gInterface.gPanel.gameOver(pName + " " + msg);
+			gmain.gInterface.gPanel.repaint();
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return ButtonName.ok;
+		}
+		
 		gmain.gInterface.gPanel.repaint();
 		while (buttonClicked == false) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return clickedButton;
+		
 	}
 	
 	public void addPlayer(Player p) {

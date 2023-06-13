@@ -29,9 +29,11 @@ public class MArea {
 		return color;
 	}
 	
-	public void drawArea(Graphics2D gc) {
-		gc.setColor(Color.white);
-		gc.fillRect(x, y, width, height);
+	public void drawArea(Graphics2D gc, boolean fill) {
+		if (fill) {
+			gc.setColor(Color.white);
+			gc.fillRect(x, y, width, height);
+		}
 		gc.setColor(color);
 		gc.fillRect(x + 20, y, width - 20, 10);
 		
