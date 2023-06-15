@@ -42,62 +42,68 @@ public class Game {
         Stack<Card> cards = new Stack<>();
         Stack<Card> cards2 = new Stack<>();
         for(int i = 0; i< 1;i++){
+            cards.push(new Property(PropertyColor.DarkBlue,PropertyColor.DarkGreen, "DARK BLUE AND DARK GREEN"));
+            cards.push(new Property(PropertyColor.Black,PropertyColor.DarkGreen, "BLACK AND DARK GREEN"));
+            cards.push(new Property(PropertyColor.Black,PropertyColor.LightGreen, "BLACK AND LIGHT GREEN"));
+            cards.push(new Property(PropertyColor.Black,PropertyColor.LightBlue, "BLACK AND LIGHT BLACK"));
             cards.push(new Money(10));
         }
         for(int i = 0; i< 2;i++){
+            cards.push(new Property(PropertyColor.DarkBlue,"DARKBLUE"));
+            cards.push(new Property(PropertyColor.Brown,"BROWN"));
+            cards.push(new Property(PropertyColor.LightGreen,"LIGHTGREEN"));
             cards.push(new Property(PropertyColor.RED,PropertyColor.Yellow, "RED AND YELLOW"));
             cards.push(new Property(PropertyColor.Brown,PropertyColor.LightBlue, "BROWN AND LIGHT BLUE"));
             cards.push(new Property(PropertyColor.Pink,PropertyColor.Orange, "PINK AND ORANGE"));
-            cards.push(new Property(PropertyColor.DarkBlue,PropertyColor.DarkGreen, "DARK BLUE AND DARK GREEN"));
-            cards.push(new Property(PropertyColor.Black,PropertyColor.LightGreen, "BLACK AND LIGHT GREEN"));
-            cards.push(new Property(PropertyColor.Black,PropertyColor.DarkGreen, "BLACK AND DARK GREEN"));
-            cards.push(new Property(PropertyColor.Black,PropertyColor.LightBlue, "BLACK AND LIGHT BLACK"));
             cards.push(new Property(PropertyColor.Black,PropertyColor.LightGreen,PropertyColor.Yellow,PropertyColor.Brown,PropertyColor.DarkBlue,PropertyColor.DarkGreen, PropertyColor.Pink,PropertyColor.LightBlue,PropertyColor.Orange,PropertyColor.RED,"UNIVERSAL"));
-
             cards.push(new RentCard(1,PropertyColor.Brown,PropertyColor.LightBlue, this));
             cards.push(new RentCard(1,PropertyColor.Pink,PropertyColor.Orange, this));
             cards.push(new RentCard(1,PropertyColor.RED,PropertyColor.Yellow, this));
             cards.push(new RentCard(1,PropertyColor.DarkBlue,PropertyColor.DarkGreen, this));
             cards.push(new RentCard(1,PropertyColor.Black,PropertyColor.LightGreen, this));
-
-            cards.push(new UniversalRent(1,this));
-
+            cards.push(new Money(5));
             cards.push(new DealBreaker(5,this));
-
             cards.push(new DoubleRent(1,this));
 
         }
         for(int i = 0; i< 3;i++){
-            cards.push(new ForcedDeal(4,this));
-            cards.push(new JustSayNo(4,this));
-            cards.push(new Property(PropertyColor.Brown,"BROWN"));
-            cards.push(new Property(PropertyColor.LightGreen,"LIGHTGREEN"));
-            cards.push(new Property(PropertyColor.DarkBlue,"DARKBLUE"));
-        }
-        for(int i = 0; i< 4;i++){
-            cards.push(new Steal(3,this));
-            cards.push(new CollectionOfDebt(4,this));
-            cards.push(new MyBirthday(2,"",this));
             cards.push(new Money(4));
-
+            cards.push(new Money(3));
+            cards.push(new UniversalRent(1,this));
+            cards.push(new House(3,4,this));
+            cards.push(new Hotel(4,4,this));
             cards.push(new Property(PropertyColor.RED,"RED"));
             cards.push(new Property(PropertyColor.LightBlue,"lightblue"));
             cards.push(new Property(PropertyColor.Yellow,"YELLOW"));
             cards.push(new Property(PropertyColor.Pink,"PINK"));
             cards.push(new Property(PropertyColor.Orange,"ORANGE"));
             cards.push(new Property(PropertyColor.DarkGreen,"DARKGREEN"));
+            cards.push(new CollectionOfDebt(4,this));
+            cards.push(new JustSayNo(4,this));
+            cards.push(new MyBirthday(2,"",this));
+
+        }
+        for(int i = 0; i< 4;i++){
+            cards.push(new ForcedDeal(4,this));
+            cards.push(new Steal(3,this));
+
+            cards.push(new Property(PropertyColor.Black,"BLACK"));
+
         }
         for(int i = 0; i< 5;i++){
-            cards.push(new Property(PropertyColor.Black,"BLACK"));
-        }
-        for(int i = 0; i< 7;i++){
-            cards.push(new House(3,4,this));
-            cards.push(new Hotel(4,4,this));
-            cards.push(new PassGo(1,this));
             cards.push(new Money(1));
             cards.push(new Money(2));
-            cards.push(new Money(3));
+        }
+        for(int i = 0; i< 7;i++){
+
+
+
+
+
             cards.push(new Money(4));
+        }
+        for(int i = 0; i< 10;i++){
+            cards.push(new PassGo(1,this));
         }
         Object[] array = cards.toArray();
         List<Object> list = Arrays.asList(array);
