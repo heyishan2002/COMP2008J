@@ -1,11 +1,8 @@
 package model.cards.ActionCards;
 
 import View.MInterface;
-<<<<<<< HEAD
-import model.Game.Game;
-=======
+
 import control.Game;
->>>>>>> 9949c066894f6bc19be9f0d458f055451d57f015
 import model.cards.*;
 import model.player.Player;
 import model.player.PlayerProperty;
@@ -15,6 +12,7 @@ import java.util.Iterator;
 import java.util.Stack;
 
 public class UniversalRent extends ActionCard {
+	
     PropertyColor propertyColor;
     PropertyColor[] propertyColors = new PropertyColor[]{PropertyColor.Orange, PropertyColor.Yellow, PropertyColor.Black, PropertyColor.Brown, PropertyColor.LightGreen, PropertyColor.LightBlue, PropertyColor.DarkGreen, PropertyColor.RED, PropertyColor.Pink, PropertyColor.DarkBlue};
     Player tenant = null;
