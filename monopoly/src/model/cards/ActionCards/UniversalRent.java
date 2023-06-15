@@ -1,7 +1,7 @@
 package model.cards.ActionCards;
 
 import View.MInterface;
-import model.Game.Game;
+import control.Game;
 import model.cards.*;
 import model.player.Player;
 import model.player.PlayerProperty;

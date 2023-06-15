@@ -1,5 +1,6 @@
 package View;
 
+import control.gmain;
 import model.player.Player;
 
 public class MInterface {

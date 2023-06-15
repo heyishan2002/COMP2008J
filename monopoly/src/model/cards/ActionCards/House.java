@@ -1,7 +1,7 @@
 package model.cards.ActionCards;
 
 import View.MInterface;
-import model.Game.Game;
+import control.Game;
 import model.cards.ActionCard;
 import model.cards.PropertyColor;
 import model.cards.Selectable;

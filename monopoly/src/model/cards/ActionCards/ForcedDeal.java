@@ -2,7 +2,7 @@ package model.cards.ActionCards;
 
 import View.MInterface;
 import model.cards.ActionCard;
-import model.Game.Game;
+import control.Game;
 import model.cards.Property;
 import model.cards.Selectable;
 import model.player.Player;
@@ -33,25 +33,6 @@ public class ForcedDeal extends ActionCard {
             return false;
         }
         if (!exchanger.reject(p)) {
-            //Get the property
-            game.refreshSelected();
-            Iterator<PlayerProperty> iterator2 = p.getMyProperty().iterator();
-            while (iterator2.hasNext()) {
-                PlayerProperty next = iterator2.next();
-                Stack<Property> p1 = next.getP();
-                for(Property pr:p1){
-                    pr.selectable();
-                }
-            }
-            MInterface.ButtonName buttonName = mInterface.gameInterface(p.getName(), "please choose a property to give", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
-
-            if(buttonName == MInterface.ButtonName.cancel){
-                return false;
-            }
-            Selectable next = game.getSelected().iterator().next();
-            game.refreshSelected();
-            exchanger.addProperty((Property) next);
-            p.removeProperty((Property) next);
 
             game.refreshSelected();
             Iterator<PlayerProperty> iterator3 = exchanger.getMyProperty().iterator();
@@ -68,10 +49,34 @@ public class ForcedDeal extends ActionCard {
                 return false;
             }
             Selectable next2 = game.getSelected().iterator().next();
+            if(exchanger.isSet(((Property)next2).getColor())){
+                return false;
+            }
             game.refreshSelected();
             p.addProperty((Property) next2);
             exchanger.removeProperty((Property) next2);
+            //Get the property
+            game.refreshSelected();
+            Iterator<PlayerProperty> iterator2 = p.getMyProperty().iterator();
+            while (iterator2.hasNext()) {
+                PlayerProperty next = iterator2.next();
+                Stack<Property> p1 = next.getP();
+                for (Property pr : p1) {
+                    pr.selectable();
+                }
+            }
+            MInterface.ButtonName buttonName = mInterface.gameInterface(p.getName(), "please choose a property to give", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
+
+            if (buttonName == MInterface.ButtonName.cancel) {
+                return false;
+            }
+            Selectable next = game.getSelected().iterator().next();
+            game.refreshSelected();
+            exchanger.addProperty((Property) next);
+            p.removeProperty((Property) next);
+
         }
+
         return true;
     }
 }

@@ -2,7 +2,7 @@ package model.cards.ActionCards;
 
 import model.cards.ActionCard;
 import model.cards.Bankable;
-import model.Game.Game;
+import control.Game;
 import model.cards.Property;
 import model.player.Player;
 
@@ -24,6 +24,9 @@ public class CollectionOfDebt extends ActionCard {
         }
         if (!tenant.reject(player)) {
             Stack payCards = tenant.pay(5);
+            if(payCards == null){
+                return false;
+            }
             Iterator iterator = payCards.iterator();
             while (iterator.hasNext()) {
                 Object card = iterator.next();

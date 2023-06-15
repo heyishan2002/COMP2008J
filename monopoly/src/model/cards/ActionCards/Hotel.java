@@ -1,11 +1,10 @@
 package model.cards.ActionCards;
 
 import View.MInterface;
-import model.Game.Game;
+import control.Game;
 import model.cards.ActionCard;
 import model.cards.PropertyColor;
 import model.cards.Selectable;
-import model.cards.Type;
 import model.player.Player;
 import model.player.PlayerProperty;
 

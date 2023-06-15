@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import javax.swing.*;
 
+import control.gmain;
 import model.cards.Bankable;
 import model.cards.Card;
 import model.cards.Property;
