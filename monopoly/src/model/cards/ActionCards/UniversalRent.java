@@ -1,9 +1,12 @@
 package model.cards.ActionCards;
 
+import View.MInterface;
 import model.Game.Game;
 import model.cards.*;
 import model.player.Player;
+import model.player.PlayerProperty;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -18,9 +21,26 @@ public class UniversalRent extends ActionCard {
 
     @Override
     public boolean use(Player p) {
+        MInterface mInterface = game.mInterface;
+        Iterator<PlayerProperty> iterator2 = p.getMyProperty().iterator();
+        while (iterator2.hasNext()) {
+            iterator2.next().selectable();
+        }
+        MInterface.ButtonName buttonName1 = mInterface.gameInterface(p.getName(), "Please choose the color", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
+        if (buttonName1 == MInterface.ButtonName.cancel) {
+            return false;
+        }
+        ArrayList<Selectable> selected1 = game.getSelected();
+        if (selected1.isEmpty()) {
+            return false;
+        }
+        Iterator<Selectable> iterator1 = selected1.iterator();
+        game.refreshSelected();
+        PlayerProperty next1 = (PlayerProperty) iterator1.next();
+        this.propertyColor = next1.getColor();
         int payNum = ((propertyColor.getRent(p.getPropertyNum(propertyColor)) + p.getColorProperty(propertyColor).rentNum()) * p.isDouble());
-        Player p1 = p.choosePlayer();
-        if(p1 == null){
+        tenant = p.choosePlayer();
+        if(tenant == null){
            return false;
         }
         boolean isRejected = false;
