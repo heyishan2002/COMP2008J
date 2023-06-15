@@ -4,9 +4,52 @@
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Tianjun_Zang 21207446
+Yishan_He 21207335
+Ziyi_Rong 21207362
+Bingyan_Zhu 21207356
+Github:
+https://github.com/heyishan2002/COMP2008J.git
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+git@github.com:heyishan2002/COMP2008J.git
+
+Gitlab: 
+https://gitlab.com/yishan.he/comp2008j-20.git
+
+git@gitlab.com:yishan.he/comp2008j-20.git
+
+ (If github have some problems, you can see our project from gitlab)
+
+Contribution:
+Since it was our first time to use git for team cooperation, our team was not proficient in many areas. We carried out many project rollback and architecture adjustment, which involved a lot of replication operations. Therefore, the contribution of some team members was unusually high, but in fact, it was not that high, and a large part of it was repeated operations. Therefore, the contribution on GitHub is not the true contribution of our team, and the detailed division of labor of our team is in this pdf.
+ZangTianjun: I was responsible for most of the back-end work and built the back-end framework. Some back-end methods are written. Fix back-end bugs.
+HeYishan: I took charge of the front-end work and built the front-end framework. Write the front-end method. Write the back-end part of the card class.
+ZhuBingyan: Responsible for writing front-end methods. Fixed front-end bugs. Write the back-end part of the card class.
+RongZiyi: Responsible for writing back-end methods. Also participate in the front-end methods. Write the back-end part of the card class.
+
+Description of our project:
+View
+
+The interface of the program is designed based on java swing. In the custom GraphicInterface class as a graphical display interface class, which contains the mainFrame as the program frame, gPanel as the program graphical interface display panel. The program defines its own panel implementation with GamePanel, derived from JPanel, which contains four playerWindow objects that are used to display each of the four players' respective areas in gPanel. The PlayerWindow class defines what to display within each player's area, including the drawBackground that displays the player's area, the drawCards that display the player's cards, and so on.
+The program defines the MInterface class used to interface with the game logic part of the program. The game logic calls the gameInterface method of the MInterface every time it needs to render a card and ask the player to select it. Before calling this method, the game logic needs to set the cards or areas that might be selected as selectable and tell the MInterface which buttons to use to confirm the action. The MInterface uses the custom MButton to implement the button function. When the button is pressed, the gameInterface returns the pressed button as a return value to the caller. After the game logic calls gameInterface, when the player clicks on the game interface, the PlayerWindow object will detect the click location. If the click is in the range of the selectable object, the selected attribute of the object will be set to true. The caller determines which objects are selected by looking at the Selected property of all pending objects.
+
+Control：
+
+
+In the control part, gmain is used as the entrance of the whole program, the Game class of the logical part is called, the logical part of the game is initialized, and the game is run. Control the run and stop of the game in the gameStart method. The front end is called when the game stops, showing the winner in the Player. At the same time, the front-end is invoked to implement interface initialization
+
+Model：
+
+In this part, the logical part of the game is realized. The player class encapsulates some methods that the player needs to operate, as well as the methods of the player's property, bank, hand cards and other materials and their corresponding needs. The player's round method defines the operations that the player can carry out in his round. In addition, the definitions of the various cards are also defined here. The Selectable class is used as the parent class for all cards and the player area to mark whether the area is selected. All cards belong to the Card class and there are two kinds of cards: Bankable and Property, property cards represent property of various colors, Bankable is divided into, Money, ActionCard, action card inherits ActionCard class, encapsulates the use effect of each action card (some of the effects of hand cards are defined in the Player class). By calling the use method inside the realization of the player using the action card of various operations.
+
+
+Framework implementation:
+Mvc: The overall project results are assigned according to contraol,model, and view
+Singleton pattern: The gmain method implements the singleton pattern
+Facade pattern: There are many implementations of this pattern in game, player, etc
+Observer mode: When we implement the property in the player class, we complete the implementation of the observer mode. When the property state changes, the player's corresponding industry state card state will also change
+
+
 
 ## Add your files
 
