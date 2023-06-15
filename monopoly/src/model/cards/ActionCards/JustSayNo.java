@@ -1,7 +1,7 @@
 package model.cards.ActionCards;
 
 import model.cards.ActionCard;
-import model.Game.Game;
+import control.Game;
 import model.player.Player;
 
 public class JustSayNo extends ActionCard {

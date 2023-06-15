@@ -2,7 +2,7 @@ package model.cards.ActionCards;
 
 import View.MInterface;
 import model.cards.ActionCard;
-import model.Game.Game;
+import control.Game;
 import model.cards.Property;
 import model.cards.Selectable;
 import model.player.Player;

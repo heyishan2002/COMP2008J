@@ -1,4 +1,4 @@
-package model.Game;
+package control;
 
 import View.GraphicInterface;
 import View.MInterface;
@@ -7,7 +7,6 @@ import model.cards.ActionCards.*;
 import model.player.Player;
 import model.player.PlayerProperty;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 

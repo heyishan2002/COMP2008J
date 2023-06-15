@@ -1,7 +1,7 @@
 package model.player;
 
 import View.MInterface;
-import model.Game.Game;
+import control.Game;
 import model.cards.*;
 import model.cards.ActionCards.DoubleRent;
 import model.cards.ActionCards.JustSayNo;

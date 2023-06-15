@@ -1,8 +1,8 @@
 package View;
 
-import java.awt.Color;
 import java.awt.event.*;
 
+import control.gmain;
 import model.cards.Selectable;
 
 public class GameListener implements MouseListener{

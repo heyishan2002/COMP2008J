@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 
+import control.gmain;
 import model.cards.Card;
 import model.cards.Selectable;
 import model.player.Player;

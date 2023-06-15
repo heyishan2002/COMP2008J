@@ -1,6 +1,6 @@
 package model.cards;
 
-import model.Game.Game;
+import control.Game;
 import model.player.Player;
 
 public abstract class ActionCard extends Bankable{

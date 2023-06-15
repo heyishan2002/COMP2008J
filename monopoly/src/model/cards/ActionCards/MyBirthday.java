@@ -2,7 +2,7 @@ package model.cards.ActionCards;
 
 import model.cards.ActionCard;
 import model.cards.Bankable;
-import model.Game.Game;
+import control.Game;
 import model.cards.Property;
 import model.player.Player;
 

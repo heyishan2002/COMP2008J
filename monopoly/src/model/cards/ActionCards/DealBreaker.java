@@ -2,7 +2,11 @@ package model.cards.ActionCards;
 
 import View.MInterface;
 import model.cards.*;
+<<<<<<< HEAD
 import model.Game.Game;
+=======
+import control.Game;
+>>>>>>> 9949c066894f6bc19be9f0d458f055451d57f015
 import model.player.Player;
 import model.player.PlayerProperty;
 
