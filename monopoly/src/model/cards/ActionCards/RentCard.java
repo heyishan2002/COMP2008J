@@ -52,6 +52,9 @@ public class RentCard extends ActionCard {
             return false;
         }
         for (Player player : this.game.getPlayers()) {
+            if(player.getName() == p.getName()){
+                continue;
+            }
                 boolean isRejected = false;
                 if (player.reject(p)) {
                     isRejected = true;

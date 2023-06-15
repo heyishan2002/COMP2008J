@@ -18,12 +18,18 @@ public class MyBirthday extends ActionCard {
     @Override
     public boolean use(Player p) {
         for (Player player: this.game.getPlayers()) {
+            if(player.getName() == p.getName()){
+                continue;
+            }
             boolean isRejected = false;
             if (player.reject(p)) {
                 isRejected = true;
             }
             if (!isRejected) {
                 Stack payCards = player.pay(2);
+                if(payCards == null){
+                    continue;
+                }
                 Iterator iterator = payCards.iterator();
                 while (iterator.hasNext()) {
                     Object card = iterator.next();

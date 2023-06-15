@@ -86,7 +86,10 @@ public class Player extends Selectable{
                 Iterator<PlayerProperty> iterator = this.myProperty.iterator();
                 while(iterator.hasNext()){
                     PlayerProperty next1 = iterator.next();
-                    next1.selectable();
+                    Stack<Property> p1 = next1.getP();
+                    for(Property pr:p1){
+                        pr.selectable();
+                    }
                 }
                 MInterface.ButtonName buttonName2 = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
                 ArrayList<Selectable> selected1 = game.getSelected();
@@ -120,26 +123,27 @@ public class Player extends Selectable{
                 for(Bankable b : this.myBank){
                     b.selectable();
                 }
+
                 MInterface.ButtonName buttonName = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
                 ArrayList<Selectable> selected1 = game.getSelected();
                 if(selected1.isEmpty() || buttonName == MInterface.ButtonName.cancel){
                     continue;
                 }
+
                 Iterator<Selectable> iterator = selected1.iterator();
                 while (iterator.hasNext()) {
                     payMoney += ((Card) iterator.next()).getMoney();
                 }
+                Iterator<Selectable> iterator2 = game.getSelected().iterator();
+                while (iterator2.hasNext()) {
+                    Selectable next1 = iterator2.next();
+                    if (next1 instanceof Bankable) {
+                        this.myBank.remove(next1);
+                        payCards.push((Card) next1);
+                    }
+                }
                 if (payMoney >= n) {
                     correctPay = true;
-                    Iterator<Selectable> iterator2 = game.getSelected().iterator();
-                    while (iterator2.hasNext()) {
-                        Selectable next1 = iterator2.next();
-                        if (next1 instanceof Bankable) {
-                            this.myBank.remove(next1);
-                            System.out.println("2");
-                            payCards.push((Card) next1);
-                        }
-                    }
                 } else {
                     if (this.myBank.empty()) {
                         int payProperty = 0;
@@ -147,37 +151,37 @@ public class Player extends Selectable{
                         Iterator<PlayerProperty> iterator5 = this.myProperty.iterator();
                         while(iterator5.hasNext()){
                             PlayerProperty next1 = iterator5.next();
-                            next1.selectable();
+                            Stack<Property> p1 = next1.getP();
+                            for(Property pr:p1){
+                                pr.selectable();
+                            }
                         }
-                        MInterface.ButtonName buttonName2 = mInterface.gameInterface(this.name, "Please pay " + n + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
+                        MInterface.ButtonName buttonName2 = mInterface.gameInterface(this.name, "Please pay " + (n- payMoney) + " billion", MInterface.OperationType.ok_cancel, MInterface.SelectionType.multiple);
                         ArrayList<Selectable> selected2 = game.getSelected();
+                        game.refreshSelected();
                         if(selected2.isEmpty() || buttonName2 == MInterface.ButtonName.cancel){
                             continue;
                         }
-                        Iterator<Selectable> iterator2 = selected2.iterator();
-                        while (iterator2.hasNext()) {
-                            payMoney += ((Card) iterator2.next()).getMoney();
+                        Iterator<Selectable> iterator4 = selected2.iterator();
+                        while (iterator4.hasNext()) {
+                            Selectable next1 = iterator4.next();
+                            payMoney += ((Card) next1 ).getMoney();
+                            payCards.push((Card) next1);
+                            this.removeProperty((Property) next1);
                         }
                         if (payProperty >= n - payMoney) {
                             correctPay = true;
-                            Iterator<Selectable> iterator3 = game.getSelected().iterator();
-                            while (iterator3.hasNext()) {
-                                Selectable next1 = iterator3.next();
-                                if (next1 instanceof Property) {
-                                    System.out.println("3");
-                                    payCards.push((Card) next1);
-                                    this.removeProperty((Property) next1);
-                                }
-                            }
                         } else {
                             if (this.getHasPropertyNum() == 0) {
                                 correctPay = true;
                             } else {
                                 this.pay(n - payMoney - payProperty);
+                                break;
                             }
                         }
                     } else {
                         this.pay(n - payMoney);
+                        break;
                     }
                 }
             }
@@ -470,7 +474,7 @@ public class Player extends Selectable{
                 }
             }
             if (isWin()) {
-                game.gameOver();
+                game.gameOver(this);
             }
         }
         while (this.handCards.toArray().length > 7) {

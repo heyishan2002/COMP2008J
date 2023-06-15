@@ -24,6 +24,9 @@ public class CollectionOfDebt extends ActionCard {
         }
         if (!tenant.reject(player)) {
             Stack payCards = tenant.pay(5);
+            if(payCards == null){
+                return false;
+            }
             Iterator iterator = payCards.iterator();
             while (iterator.hasNext()) {
                 Object card = iterator.next();

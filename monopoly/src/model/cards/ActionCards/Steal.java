@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.Stack;
 
 public class Steal extends ActionCard {
-    Player embezzler = null;
     public Steal(int money, Game g) {
         super(money, "STEAL",g);
         setMessage("Steal other players' property");
@@ -44,15 +43,16 @@ public class Steal extends ActionCard {
             }
             MInterface.ButtonName buttonName2 = mInterface.gameInterface(p.getName(), "please choose a property to get", MInterface.OperationType.ok_cancel, MInterface.SelectionType.single);
             if(buttonName2 == MInterface.ButtonName.cancel){
-                System.out.println("1");
                 return false;
             }
             ArrayList<Selectable> selected1 = game.getSelected();
             if(selected1.isEmpty()){
-                System.out.println("2");
                 return false;
             }
             Selectable next2 = selected1.iterator().next();
+            if(exchanger.isSet(((Property)next2).getColor())){
+                return false;
+            }
             game.refreshSelected();
             p.addProperty((Property) next2);
             exchanger.removeProperty((Property) next2);

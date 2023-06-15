@@ -69,6 +69,7 @@ public class Game {
 
         }
         for(int i = 0; i< 3;i++){
+            cards.push(new ForcedDeal(4,this));
             cards.push(new JustSayNo(4,this));
             cards.push(new Property(PropertyColor.Brown,"BROWN"));
             cards.push(new Property(PropertyColor.LightGreen,"LIGHTGREEN"));
@@ -145,7 +146,8 @@ public class Game {
         return game;
     }
 
-    public void gameOver(){
+    public void gameOver(Player p){
+        mInterface.gameInterface(p.getName(),( "win!"), MInterface.OperationType.game_over, MInterface.SelectionType.single);
         this.over = true;
     }
 
@@ -192,9 +194,11 @@ public class Game {
                 Stack<Property> p1 = next.getP();
                 for(Property pr:p1){
                     pr.unSelectable();
+                    pr.selected = false;
                 }
                 for(Bankable b:player.getMyBank()){
-                    b.selectable();
+                    b.unSelectable();
+                    b.selected = false;
                 }
             }
         }
