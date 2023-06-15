@@ -470,7 +470,7 @@ public class Player extends Selectable{
                 }
             }
             if (isWin()) {
-                game.gameOver();
+                game.gameOver(this);
             }
         }
         while (this.handCards.toArray().length > 7) {

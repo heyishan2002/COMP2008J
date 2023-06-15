@@ -145,7 +145,8 @@ public class Game {
         return game;
     }
 
-    public void gameOver(){
+    public void gameOver(Player p){
+        mInterface.gameInterface(p.getName(),(p.getName() + "win!"), MInterface.OperationType.game_over, MInterface.SelectionType.single);
         this.over = true;
     }
 
@@ -192,9 +193,11 @@ public class Game {
                 Stack<Property> p1 = next.getP();
                 for(Property pr:p1){
                     pr.unSelectable();
+                    pr.selected = false;
                 }
                 for(Bankable b:player.getMyBank()){
-                    b.selectable();
+                    b.unSelectable();
+                    b.selected = false;
                 }
             }
         }
